@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# version="1.2.3.4"
+
+# IFS='.' read -ra ADDR <<< "$version"
+# echo "${ADDR[@]}"
+# ver=()
+# for i in "${ADDR[@]}"; do
+#     echo "Adding $i to ver"
+#     ver+=("$i")
+# done
+# echo "${ver[@]}"
+
+is_curver_gte_minver() {
+    local curr_version=${1}
+    local min_version=${2}
+    IFS='.' read -ra CURR_ARRAY <<< ${curr_version}
+    IFS='.' read -ra MIN_ARRAY <<< ${min_version}
+    echo "current: ${CURR_ARRAY[@]}"
+    echo "minimum: ${MIN_ARRAY[@]}"
+
+    if (( ${CURR_ARRAY[0]} < ${MIN_ARRAY[0]} )); then
+        echo V1 too small
+        return 1
+    elif (( ${CURR_ARRAY[1]} < ${MIN_ARRAY[1]} )); then
+        echo V2 too small
+        return 2
+    elif (( ${CURR_ARRAY[2]} < ${MIN_ARRAY[2]} )); then
+        echo V3 too small
+        return 3
+    elif (( ${CURR_ARRAY[3]} < ${MIN_ARRAY[3]} )); then
+        echo V4 too small
+        return 4
+    fi
+    echo SUCCESS
+    return 0
+}
+
+cur_ver="1.2.3.4"
+min_ver="1.0.1.1"
+is_curver_gte_minver ${cur_ver} ${min_ver}
+retval=$?
+echo "retval: ${retval}"
+if [ ${retval} -ne 0 ]; then
+    echo BAD
+else
+    echo GOOD
+fi
